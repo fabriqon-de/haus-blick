@@ -1,0 +1,71 @@
+import { test, expect } from '@playwright/test';
+test('real SDK renders, HA values update without replacing the canvas, and more-info uses HA events', async ({ page }) => {
+  const external: string[] = []; page.on('request', request => { if (!request.url().startsWith('http://127.0.0.1:4176/')) external.push(request.url()); });
+  await page.goto('/tests/fixtures/');
+  const card = page.locator('haus-blick-card');
+  await expect(card.locator('canvas')).toBeVisible();
+  await expect(card.locator('.entity-row').first()).toContainText('21,5 °C');
+  await page.evaluate(() => { (window as any).originalCanvas = (window as any).card.shadowRoot.querySelector('canvas'); (window as any).setState('sensor.living_temperature', '24.2'); });
+  await expect(card.locator('.entity-row').first()).toContainText('24,2 °C');
+  expect(await page.evaluate(() => (window as any).originalCanvas === (window as any).card.shadowRoot.querySelector('canvas'))).toBe(true);
+  await card.locator('.entity-row').first().click();
+  expect(await page.evaluate(() => (window as any).events)).toEqual([{ entityId: 'sensor.living_temperature' }]);
+  await card.locator('.entity-row').first().focus(); await page.keyboard.press('Enter');
+  expect(await page.evaluate(() => (window as any).events.length)).toBe(2);
+  await card.locator('.marker-label').first().click();
+  expect(await page.evaluate(() => (window as any).events.at(-1).entityId)).toBe('sensor.living_temperature');
+  for (const label of await card.locator('.marker-label').all()) await label.click();
+  expect(await page.evaluate(() => (window as any).events.at(-1).entityId)).toBe('light.kitchen');
+  expect(external).toEqual([]);
+});
+test('unknown, missing and unavailable states stay distinct; entity text is not HTML', async ({ page }) => {
+  await page.goto('/tests/fixtures/'); const rows = page.locator('haus-blick-card .entity-row');
+  await page.evaluate(() => (window as any).setState('sensor.living_temperature', 'unavailable'));
+  await expect(rows.first()).toHaveAttribute('data-status', 'unavailable');
+  await page.evaluate(() => (window as any).setState('sensor.living_temperature', 'unknown'));
+  await expect(rows.first()).toHaveAttribute('data-status', 'unknown');
+  await page.evaluate(() => (window as any).setState('sensor.living_temperature', '22', { friendly_name: '<img src=x onerror=alert(1)>' }));
+  await expect(rows.first()).toContainText('<img src=x onerror=alert(1)>');
+  await expect(page.locator('haus-blick-card img')).toHaveCount(0);
+  await page.evaluate(() => { const c = (window as any).card; const h = { ...c.hass, states: { ...c.hass.states } }; delete h.states['sensor.living_temperature']; c.hass = h; });
+  await expect(rows.first()).toHaveAttribute('data-status', 'missing'); await expect(rows.first()).toBeDisabled();
+});
+test('native visual editor selects existing entities, persists through config-changed and rejects invalid dimensions', async ({ page }) => {
+  await page.goto('/tests/fixtures/'); await page.evaluate(() => (window as any).openEditor());
+  const editor = page.locator('haus-blick-card-editor');
+  await editor.locator('.general [name="title"]').fill('Unser Haus'); await editor.locator('.general [name="title"]').press('Tab');
+  await expect.poll(() => page.evaluate(() => (window as any).configEvents.at(-1)?.title)).toBe('Unser Haus');
+  await editor.locator('.binding').first().locator('[name="entity"]').fill('light.kitchen');
+  await editor.locator('.binding').first().locator('[name="entity"]').press('Tab');
+  await expect(editor.locator('[role="alert"]')).toContainText('Doppelte');
+  await editor.locator('.binding').first().locator('[name="entity"]').fill('sensor.living_temperature'); await editor.locator('.binding').first().locator('[name="entity"]').press('Tab');
+  await editor.locator('.room').first().locator('[name="width"]').fill('-1'); await editor.locator('.room').first().locator('[name="width"]').press('Tab');
+  await expect(editor.locator('[role="alert"]')).toContainText('room.width');
+  expect(await page.evaluate(() => (window as any).configEvents.at(-1).rooms[0].width)).toBe(6);
+});
+test('WebGL failure keeps values and HA details usable', async ({ page }) => {
+  await page.addInitScript(() => { const original = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(type: any, ...args: any[]) { if (String(type).startsWith('webgl')) return null; return (original as any).call(this, type, ...args); } as any; });
+  await page.goto('/tests/fixtures/'); const card = page.locator('haus-blick-card');
+  await expect(card.locator('.fallback')).toContainText('3D ist auf diesem Gerät nicht verfügbar');
+  await expect(card.locator('.entity-row').first()).toContainText('21,5 °C');
+  await card.locator('.entity-row').first().click(); expect(await page.evaluate(() => (window as any).events[0].entityId)).toBe('sensor.living_temperature');
+});
+test('disconnect disposes WebGL, reconnect creates one fresh viewer, and context loss falls back', async ({ page }) => {
+  await page.goto('/tests/fixtures/'); await expect(page.locator('haus-blick-card canvas')).toBeVisible();
+  await page.evaluate(() => { const w = window as any; w.previousCanvas = w.card.shadowRoot.querySelector('canvas'); w.previousContext = w.previousCanvas.getContext('webgl2'); w.card.remove(); });
+  await expect.poll(() => page.evaluate(() => (window as any).previousContext.isContextLost())).toBe(true);
+  await page.evaluate(() => document.querySelector('#mount')!.append((window as any).card));
+  await expect(page.locator('haus-blick-card canvas')).toHaveCount(1);
+  expect(await page.evaluate(() => (window as any).previousCanvas !== (window as any).card.shadowRoot.querySelector('canvas'))).toBe(true);
+  await page.locator('haus-blick-card canvas').dispatchEvent('webglcontextlost');
+  await expect(page.locator('haus-blick-card .fallback')).toContainText('3D-Kontext wurde unterbrochen');
+  await expect(page.locator('haus-blick-card .entity-row').first()).toContainText('21,5 °C');
+});
+test('mobile and reduced motion preserve scrolling and available controls', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 }); await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/tests/fixtures/'); await expect(page.locator('haus-blick-card canvas')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.locator('haus-blick-card .entity-row').last().scrollIntoViewIfNeeded();
+  await page.locator('haus-blick-card .entity-row').last().click();
+  expect(await page.evaluate(() => (window as any).events[0].entityId)).toBe('light.kitchen');
+});
