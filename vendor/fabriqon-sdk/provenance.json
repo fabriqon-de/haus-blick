@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/fabriqon-de/sdk",
+  "commit": "1e7762d5f22cf8ae46b977d3ae1f649e36271993",
+  "version": "0.1.0",
+  "files": {
+    "dist/assets.d.ts": "50fac70a80a221c9034117dfa67ff35c7594980804bf77cd0f5dd3bf4f0f4598",
+    "dist/assets.js": "fa172a73d71d8b41cab7f022a8b5fbb2b322e660a120a1243ef651e15db5d17e",
+    "dist/drawing.d.ts": "0e7208113cf8aa9d8df79d43ccadbaba0d5dd84750d93f02cfc0ceaf7be7cf3b",
+    "dist/drawing.js": "dbd7e39c59afdbba8333efb22debd17b075e4f789e0ac857e5b5400008e5aa9b",
+    "dist/model.d.ts": "1a4d1b5ff58932c5d90ad573776684cd4c245a9be216d6783519f09b3d593585",
+    "dist/model.js": "c384fb86155aac77f53b10491a398baf3a1c3f2337e1222e6a048320ae33998e",
+    "dist/viewer.d.ts": "2c053d354084eca2ac10b9c4f7dbda26014495045eb7e0f7c5cbc29100805977",
+    "dist/viewer.js": "636e05168e345e227e1f38907a3929ac5472c8e4cef39b784a78cfe067030fd0",
+    "LICENSE": "52d6e3da6abbc54454435e339d5c2798801651d639ca4e5dfe4e05618ccc7b8a",
+    "package.json": "6937afd0cc38d7120e6c3a507c365c5ae9ebd9446561b8ba91df34dbffd17a8b"
+  }
+}

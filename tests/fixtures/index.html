@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Haus Blick — simulated Home Assistant</title>
+<style>body{margin:0;padding:20px;background:#e7edf3;color:#172735;font:16px system-ui}main{max-width:850px;margin:auto}h1{font-size:20px}.notice{font-size:13px;line-height:1.6}haus-blick-card{display:block}haus-blick-card-editor{display:block;margin-top:24px;padding:16px;background:white}</style></head>
+<body><main><h1>Haus Blick · Frontend-Testumgebung</h1><p class="notice">Simulierte Home-Assistant-Zustände. Kein echter HA-Server, keine Brokerverbindung.</p><div id="mount"></div><div id="editor"></div></main>
+<script type="module">
+import '/dist/haus-blick.js';
+window.events=[];window.configEvents=[];
+document.addEventListener('hass-more-info',event=>window.events.push(event.detail));
+document.addEventListener('config-changed',event=>window.configEvents.push(event.detail.config));
+window.makeHass = () => ({language:'de',themes:{darkMode:false},states:{
+ 'sensor.living_temperature':{entity_id:'sensor.living_temperature',state:'21.5',attributes:{friendly_name:'Wohnzimmertemperatur',unit_of_measurement:'°C'}},
+ 'light.kitchen':{entity_id:'light.kitchen',state:'off',attributes:{friendly_name:'Küchenlicht'}},
+ 'binary_sensor.window':{entity_id:'binary_sensor.window',state:'off',attributes:{friendly_name:'Wohnzimmerfenster',device_class:'window'}}
+}});
+window.config={type:'custom:haus-blick-card',title:'Mein Zuhause',height:400,rooms:[
+ {id:'living',name:'Wohnen',x:0,z:0,width:6,depth:4},{id:'kitchen',name:'Küche',x:6,z:0,width:3,depth:4}
+],entities:[{entity:'sensor.living_temperature',room:'living',x:2,z:2},{entity:'binary_sensor.window',room:'living',x:4,z:1},{entity:'light.kitchen',room:'kitchen',x:1.5,z:2}]};
+window.card=document.createElement('haus-blick-card');window.card.setConfig(window.config);window.card.hass=window.makeHass();document.querySelector('#mount').append(window.card);
+window.setState=(id,state,attributes={})=>{const previous=window.card.hass;window.card.hass={...previous,states:{...previous.states,[id]:{...previous.states[id],state,attributes:{...previous.states[id]?.attributes,...attributes}}}};};
+window.openEditor=()=>{const editor=document.createElement('haus-blick-card-editor');editor.setConfig(window.config);editor.hass=window.makeHass();document.querySelector('#editor').replaceChildren(editor);return editor;};
+</script></body></html>

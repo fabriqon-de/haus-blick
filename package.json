@@ -1,0 +1,30 @@
+{
+  "name": "haus-blick-card",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Home Assistant entities in a 3D house model — a HACS dashboard card powered by Fabriqon",
+  "repository": { "type": "git", "url": "https://github.com/fabriqon-de/haus-blick.git" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "vite build",
+    "test": "vitest run tests/unit",
+    "test:browser": "playwright test",
+    "check:package": "node scripts/check-package.mjs",
+    "preview": "vite --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@fabriqon/sdk": "file:vendor/fabriqon-sdk",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "26.6.5",
+    "@types/three": "0.186.0",
+    "typescript": "6.0.3",
+    "vite": "7.3.7",
+    "vitest": "4.1.12"
+  }
+}

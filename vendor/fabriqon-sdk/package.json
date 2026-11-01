@@ -1,0 +1,25 @@
+{
+  "name": "@fabriqon/sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/model.d.ts",
+      "import": "./dist/model.js"
+    },
+    "./viewer": {
+      "types": "./dist/viewer.d.ts",
+      "import": "./dist/viewer.js"
+    }
+  },
+  "peerDependencies": {
+    "three": "^0.186.0"
+  },
+  "peerDependenciesMeta": {
+    "three": {
+      "optional": true
+    }
+  }
+}
