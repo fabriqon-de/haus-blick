@@ -263,6 +263,8 @@ test("house views and floors preserve the viewer; outdoor values still open HA d
   await card.locator(".top").click();
   await expect(card.locator(".top")).toHaveAttribute("aria-pressed", "true");
   await card.locator(".inside").click();
+  const waitRendered=async()=>{const frame=await page.evaluate(()=>(window as any).card.context.renderer.info.render.frame);await expect.poll(()=>page.evaluate(()=>(window as any).card.context.renderer.info.render.frame)).toBeGreaterThan(frame);};
+  await waitRendered();
   await page.evaluate(() => {
     const w = window as any;
     w.geometryBefore = w.card.context.renderer.info.memory.geometries;
@@ -283,6 +285,7 @@ test("house views and floors preserve the viewer; outdoor values still open HA d
     await card.locator(".outside").click();
     await card.locator(".inside").click();
   }
+  await waitRendered();
   expect(
     await page.evaluate(() => {
       const w = window as any;
