@@ -6,16 +6,19 @@ Haus Blick startet neu als reine Frontend-Karte. Es benötigt keinen eigenen Con
 
 ![Haus Blick mit simulierten Home-Assistant-Zuständen](docs/preview.png)
 
-## Entwicklungsstand 0.1.0
+## Entwicklungsstand 0.2.0
 
-- Rechteckige Räume in Metern als offenes 3D-Hausmodell konfigurieren.
+- Rechteckige und polygonale Räume in Metern, echte Wände mit Tür-/Fensteröffnungen, Flach- oder Satteldächer konfigurieren.
+- Zwischen Außenansicht, offener Innenansicht und Grundriss wechseln; Geschosse über ihre Höhe auswählen.
+- Vorbereitete ASCII-DXF-Dateien oder SDK DrawingPlan JSON lokal mit Vorschau, Einheiten, Drehung und Maßstab importieren. Raumwechsel und Sensorpositionen vor der Übernahme prüfen.
+- Garten und Terrasse sowie Bäume, Sträucher, Töpfe und Beete ergänzen; vorhandene HA-Entitäten wie Bodenfeuchte oder Bewässerung auf Außenflächen platzieren.
 - Bestehende HA-Entitäten Räumen und Positionen zuordnen; Werte und Einheiten im Modell und in einer zugänglichen Liste sehen.
 - Zustandsänderungen übernehmen, ohne Kamera oder WebGL-Viewer neu zu erzeugen.
 - Aktive Kontakte/Lichter sowie fehlende, unbekannte und nicht verfügbare Zustände unterscheiden.
 - Anklicken öffnet den normalen HA-Entitätsdialog mit vorhandenen Bedienelementen und Verlaufsdaten. Ein Verlauf setzt eine entsprechende HA-Aufzeichnung voraus.
 - Visueller Karteneditor, Touch-/Kamerabedienung und Entitätsliste als WebGL-Fallback.
 
-Automatisierte Browser-Tests verwenden den echten SDK-Viewer mit simuliertem Home Assistant. Reale HA-/HACS-Installation und Companion Apps sind noch nicht abgenommen. Kein automatisches Erkennen des Hauses, keine externen 3D-Dateien, kein DXF-/IFC-Import und kein Wandzeichen-Editor werden behauptet.
+Automatisierte Browser-Tests verwenden den echten SDK-Viewer mit simuliertem Home Assistant. Reale HA-/HACS-Installation und Companion Apps sind noch nicht abgenommen. Die Dächer sind einfache Dachabschnitte pro Raum, kein zusammenhängend berechnetes BIM-Dach. Import zunächst für eine Ebene; kein IFC-, PDF-, Foto- oder 3D-Mesh-Import und kein Wandzeichen-Editor.
 
 ## Installation
 
@@ -47,7 +50,7 @@ entities:
 
 IDs durch tatsächlich vorhandene HA-Entitäten ersetzen. Der Standardgrundriss ist ein konfigurierbares Beispiel, keine automatisch erkannte Hausstruktur.
 
-[Installation und Fehlersuche](docs/installation.md) · [Konfiguration](docs/configuration.md) · [Tests und reale Abnahme](docs/testing.md) · [Architektur](docs/architecture.md) · [Roadmap](docs/roadmap.md).
+[Haus und Garten als Beispiel](examples/house-garden.json) · [Importbeispiel](examples/floor-plan.json) · [Zeichnungsimport](docs/import.md) · [Installation und Fehlersuche](docs/installation.md) · [Konfiguration](docs/configuration.md) · [Tests und reale Abnahme](docs/testing.md) · [Architektur](docs/architecture.md) · [Roadmap](docs/roadmap.md).
 
 ## Entwicklung
 
