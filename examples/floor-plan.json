@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "name": "L-förmiger Beispielraum",
+  "unit": "m",
+  "rooms": [
+    {
+      "id": "wohnen",
+      "name": "Wohnen",
+      "polygon": [
+        {
+          "x": 0,
+          "z": 0
+        },
+        {
+          "x": 6,
+          "z": 0
+        },
+        {
+          "x": 6,
+          "z": 2
+        },
+        {
+          "x": 4,
+          "z": 2
+        },
+        {
+          "x": 4,
+          "z": 4
+        },
+        {
+          "x": 0,
+          "z": 4
+        }
+      ]
+    }
+  ],
+  "walls": []
+}

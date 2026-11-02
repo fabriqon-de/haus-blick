@@ -12,6 +12,10 @@
     "./viewer": {
       "types": "./dist/viewer.d.ts",
       "import": "./dist/viewer.js"
+    },
+    "./drawing": {
+      "types": "./dist/drawing.d.ts",
+      "import": "./dist/drawing.js"
     }
   },
   "peerDependencies": {

@@ -1,0 +1,112 @@
+{
+  "type": "custom:haus-blick-card",
+  "title": "Haus und Garten",
+  "height": 480,
+  "rooms": [
+    {
+      "id": "wohnen",
+      "name": "Wohnen",
+      "x": 0,
+      "z": 0,
+      "width": 6,
+      "depth": 4
+    },
+    {
+      "id": "kueche",
+      "name": "Küche",
+      "x": 6,
+      "z": 0,
+      "width": 3,
+      "depth": 4
+    },
+    {
+      "id": "terrasse",
+      "name": "Terrasse",
+      "kind": "terrace",
+      "x": 0,
+      "z": 4,
+      "width": 9,
+      "depth": 2
+    },
+    {
+      "id": "garten",
+      "name": "Garten",
+      "kind": "garden",
+      "x": 0,
+      "z": 6,
+      "width": 9,
+      "depth": 5
+    }
+  ],
+  "building": {
+    "wall_height": 2.7,
+    "roof": "gable",
+    "roof_height": 1.2,
+    "openings": [
+      {
+        "wall": "wall-2",
+        "offset": 1,
+        "width": 1,
+        "height": 2.1,
+        "sill": 0
+      },
+      {
+        "wall": "wall-5",
+        "offset": 1,
+        "width": 1.4,
+        "height": 1.2,
+        "sill": 0.9
+      }
+    ]
+  },
+  "plants": [
+    {
+      "id": "apfelbaum",
+      "kind": "tree",
+      "x": 1.5,
+      "z": 9,
+      "size": 1.4
+    },
+    {
+      "id": "strauch",
+      "kind": "shrub",
+      "x": 7.5,
+      "z": 9,
+      "size": 1
+    },
+    {
+      "id": "topf",
+      "kind": "pot",
+      "x": 7,
+      "z": 5,
+      "size": 0.8
+    },
+    {
+      "id": "beet",
+      "kind": "bed",
+      "x": 5,
+      "z": 9,
+      "size": 2
+    }
+  ],
+  "entities": [
+    {
+      "entity": "sensor.wohnzimmer_temperatur",
+      "room": "wohnen",
+      "x": 2,
+      "z": 2
+    },
+    {
+      "entity": "sensor.garten_bodenfeuchte",
+      "room": "garten",
+      "x": 4,
+      "z": 3
+    },
+    {
+      "entity": "switch.bewaesserung",
+      "room": "garten",
+      "x": 6,
+      "z": 2
+    }
+  ]
+}

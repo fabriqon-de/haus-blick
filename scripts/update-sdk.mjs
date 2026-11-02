@@ -15,7 +15,7 @@ rmSync(destination, { recursive: true, force: true }); mkdirSync(destination, { 
 for (const name of ['dist', 'LICENSE']) cpSync(resolve(source, name), resolve(destination, name), { recursive: true });
 const upstream = JSON.parse(readFileSync(resolve(source, 'package.json'), 'utf8'));
 const pkg = { name: upstream.name, version: upstream.version, private: true, type: 'module', license: upstream.license,
-  exports: { '.': upstream.exports['.'], './viewer': upstream.exports['./viewer'] },
+  exports: { '.': upstream.exports['.'], './viewer': upstream.exports['./viewer'], './drawing': upstream.exports['./drawing'] },
   peerDependencies: upstream.peerDependencies, peerDependenciesMeta: upstream.peerDependenciesMeta };
 writeFileSync(resolve(destination, 'package.json'), JSON.stringify(pkg, null, 2) + '\n');
 const files = {};
