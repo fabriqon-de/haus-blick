@@ -441,6 +441,7 @@ test("import can explicitly remap existing entities before saving", async ({
     });
   await editor.locator(".preview-import").click();
   await expect(editor.locator(".apply-import")).toBeDisabled();
+  await expect(editor.locator(".import-binding")).toHaveCount(3);
   for (const row of await editor.locator(".import-binding").all())
     await row.locator("select").selectOption("newroom");
   await expect(editor.locator(".apply-import")).toBeEnabled();
